@@ -40,128 +40,14 @@ INSERT INTO `rooms` (`id`, `title`, `price`, `description`) VALUES (NULL, 'Queen
 ## PHP
 
 ### db_connection.php
-<?php
-
-// database connection
-$db_conn = mysqli_connect("localhost","root","root","react_php_crud");
-
-if (!$db_conn){
-    // stops code execution on error
-    die('Error connect to database');
-}
 
 ### all-rooms.php
-<?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: access");
-header("Access-Control-Allow-Methods: GET");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-
-require 'db_connection.php';
-
-$allRooms = mysqli_query($db_conn, "SELECT * FROM `rooms`");
-if (mysqli_num_rows($allRooms) > 0) {
-    $all_rooms = mysqli_fetch_all($allRooms, MYSQLI_ASSOC);
-    echo json_encode(["success" => 1, "rooms" => $all_rooms]);
-} else {
-    echo json_encode(["success" => 0]);
-}
 
 ### add-room.php
-<?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: access");
-header("Access-Control-Allow-Methods: POST");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-
-require 'db_connection.php';
-
-// POST DATA
-$data = json_decode(file_get_contents("php://input"));
-
-if (
-    isset($data->title)
-    && isset($data->price)
-    && isset($data->description)
-    && !empty(trim($data->title))
-    && !empty(trim($data->price))
-    && !empty(trim($data->description))
-) {
-    $title = mysqli_real_escape_string($db_conn, trim($data->title));
-    $price = mysqli_real_escape_string($db_conn, trim($data->price));
-    $description = mysqli_real_escape_string($db_conn, trim($data->description));
-
-    $insertRoom = mysqli_query($db_conn, "INSERT INTO `rooms`(`title`,`price`,`description`) VALUES('$title','$useremail','$description')");
-    if ($insertRoom) {
-        $last_id = mysqli_insert_id($db_conn);
-        echo json_encode(["success" => 1, "msg" => "Room Inserted.", "id" => $last_id]);
-    } else {
-        echo json_encode(["success" => 0, "msg" => "Room Not Inserted!"]);
-    }
-
-} else {
-    echo json_encode(["success" => 0, "msg" => "Please fill all the required fields!"]);
-}
 
 ### update-room.php
-<?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: access");
-header("Access-Control-Allow-Methods: POST");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-
-require 'db_connection.php';
-
-$data = json_decode(file_get_contents("php://input"));
-
-if (
-    isset($data->id)
-    && isset($data->title)
-    && isset($data->price)
-    && isset($data->description)
-    && is_numeric($data->id)
-    && !empty(trim($data->title))
-    && !empty(trim($data->price))
-    && !empty(trim($data->description))
-) {
-    $title = mysqli_real_escape_string($db_conn, trim($data->title));
-    $price = mysqli_real_escape_string($db_conn, trim($data->price));
-    $description = mysqli_real_escape_string($db_conn, trim($data->description));
-    $updateRoom = mysqli_query($db_conn, "UPDATE `rooms` SET `title`='$title', `price`='$price', `description`='$description' WHERE `id`='$data->id'");
-    if ($updateRoom) {
-        echo json_encode(["success" => 1, "msg" => "Room Updated."]);
-    } else {
-        echo json_encode(["success" => 0, "msg" => "Room Not Updated!"]);
-    }
-} else {
-    echo json_encode(["success" => 0, "msg" => "Please fill all the required fields!"]);
-}
 
 ### delete-room.php
-<?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: access");
-header("Access-Control-Allow-Methods: POST");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-
-require 'db_connection.php';
-
-$data = json_decode(file_get_contents("php://input"));
-if (isset($data->id) && is_numeric($data->id)) {
-    $delID = $data->id;
-    $deleteRoom = mysqli_query($db_conn, "DELETE FROM `rooms` WHERE `id`='$delID'");
-    if ($deleteRoom) {
-        echo json_encode(["success" => 1, "msg" => "Room Deleted"]);
-    } else {
-        echo json_encode(["success" => 0, "msg" => "Room Not Found!"]);
-    }
-} else {
-    echo json_encode(["success" => 0, "msg" => "Room Not Found!"]);
-}
 
 ## Options
 ---
