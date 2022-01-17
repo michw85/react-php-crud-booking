@@ -40,25 +40,51 @@ INSERT INTO `rooms` (`id`, `title`, `price`, `description`) VALUES (NULL, 'Queen
 ## PHP
 
 ### db_connection.php
+---
+![alt text](src/img/screen5.jpg "db_connection")
+
+---
 
 ### all-rooms.php
+---
+![alt text](src/img/screen6.jpg "all-rooms")
 
+---
 ### add-room.php
+---
+![alt text](src/img/screen7.jpg "add-room")
+
+---
 
 ### update-room.php
+---
+![alt text](src/img/screen8.jpg "update-room")
+
+---
 
 ### delete-room.php
+---
+![alt text](src/img/screen9.jpg "delete-room")
+
+---
 
 ## Options
 ---
+### Insert and Edit information to DataBase
+
 ![alt text](src/img/screen2.jpg "Insert and Edit information to DataBase")
-## Available Scripts
+
 ---
+### Search room
 ![alt text](src/img/screen3.jpg "Search room")
 
 ---
+### More information - details of the room and Button: 'Book a room'
 ![alt text](src/img/screen4.jpg "More information and 'Booking room'")
 
+---
+
+## Available Scripts
 In the project directory, you can run:
 
 ### `npm start`
