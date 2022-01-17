@@ -59,6 +59,10 @@ export const Actions = () => {
       });
   };
 
+  const getRoom = (Id) => {
+    return rooms.find(({ id }) => Id === id);
+  }
+
   // Enabling the edit mode for a listed room.
   const editMode = (id) => {
     rooms = rooms.map((room) => {
@@ -156,6 +160,7 @@ export const Actions = () => {
     updateRoom,
     insertRoom,
     deleteRoom,
+    getRoom,
     roomLength,
   };
 };

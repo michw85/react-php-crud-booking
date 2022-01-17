@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
 import { AppContext } from "../Context";
+
 const Form = () => {
   const { insertRoom } = useContext(AppContext);
   const [newRoom, setNewRoom] = useState({});
@@ -20,37 +21,37 @@ const Form = () => {
   };
 
   return (
-    <form className="insertForm" onSubmit={submitRoom}>
-      <h2>Insert Room</h2>
-      <label htmlFor="_title">Title</label>
-      <input
-        type="text"
-        id="_title"
-        onChange={(e) => addNewRoom(e, "title")}
-        placeholder="Enter title"
-        autoComplete="off"
-        required
-      />
-      <label htmlFor="_price">Price</label>
-      <input
-        type="text"
-        id="_price"
-        onChange={(e) => addNewRoom(e, "price")}
-        placeholder="Enter price"
-        autoComplete="off"
-        required
-      />
-      <label htmlFor="_description">Description</label>
-      <input
-        type="text"
-        id="_description"
-        onChange={(e) => addNewRoom(e, "description")}
-        placeholder="Enter description"
-        autoComplete="off"
-        required
-      />
-      <input type="submit" value="Insert" />
-    </form>
+      <form className="insertForm" onSubmit={submitRoom}>
+        <h2>Insert Room</h2>
+        <label htmlFor="_title">Title</label>
+        <input
+          type="text"
+          id="_title"
+          onChange={(e) => addNewRoom(e, "title")}
+          placeholder="Enter title"
+          autoComplete="off"
+          required
+        />
+        <label htmlFor="_price">Price</label>
+        <input
+          type="text"
+          id="_price"
+          onChange={(e) => addNewRoom(e, "price")}
+          placeholder="Enter price"
+          autoComplete="off"
+          required
+        />
+        <label htmlFor="_description">Description</label>
+        <input
+          type="text"
+          id="_description"
+          onChange={(e) => addNewRoom(e, "description")}
+          placeholder="Enter description"
+          autoComplete="off"
+          required
+        />
+        <input type="submit" value="Insert" />
+      </form>
   );
 };
 

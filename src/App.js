@@ -1,23 +1,32 @@
-import { Provider } from "./Context";
-import Form from "./components/Form";
-import RoomList from "./components/RoomList";
-import { Actions } from "./Actions";
+// import { Actions } from "./Actions";
+import { createBrowserHistory } from "history";
+import { BrowserRouter as Router } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import { HomePage } from "./pages/Home";
+import { DetailPage } from "./pages/DetailPage";
+import { Contacts } from "./pages/Contacts";
+import { Navbar } from "./components/Navbar";
+import Footer from "./components/Footer";
+import "materialize-css";
+import "bootstrap/dist/css/bootstrap.min.css";
+
 function App() {
-  const data = Actions();
+  // const data = Actions();
+  const history = createBrowserHistory();
+  // Routing to navigate between pages + building a frame of App
   return (
-    <Provider value={data}>
-      <div className="App">
-        <h1>React JS + PHP CRUD Booking Application</h1>
-        <div className="wrapper">
-          <section className="left-side">
-            <Form />
-          </section>
-          <section className="right-side">
-            <RoomList />
-          </section>
-        </div>
-      </div>
-    </Provider>
+    <>
+      <Router history={history}>
+        <Navbar />
+        <Routes>
+          <Route exact path="/" element={<HomePage />} />
+          <Route path="/home" exact element={<HomePage />}></Route>
+          <Route path="/contacts" element={<Contacts />} />
+          <Route path="/details/:id" element={<DetailPage />} />
+        </Routes>
+      </Router>
+      <Footer />
+    </>
   );
 }
 
