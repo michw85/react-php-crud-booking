@@ -1,8 +1,177 @@
-# Getting Started with Create React App
+# Mini application for booking rooms
+---
+![alt text](src/img/screen1.jpg "Screen of Header(Navigation)/Footer, InsertForm, Table and SearchForm")
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+---
 
+## Stack of technology:
+
+* react
+* php
+* mySQL
+* CRUD
+* web API 
+* Libraries: bootstrap, materialize
+
+---
+
+## SQL
+
+Database name – react_php_crud
+log/pas: root
+Table name – rooms
+
+---
+
+SQL code to create the rooms table and the structure of the rooms table:
+CREATE TABLE `react_php_crud`.`rooms` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `title` VARCHAR(255) NULL DEFAULT NULL , `price` BIGINT(11) NULL DEFAULT NULL , `description` TEXT NULL DEFAULT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+---
+
+INSERT INTO `rooms` (`id`, `title`, `price`, `description`) VALUES (NULL, 'Single room', '100', 'these rooms are assigned to one person or a couple. It may have one or more beds, but the size of the bed depends on the hotel. Some single rooms have a twin bed, most will have a double, few will have a queen bed.');
+INSERT INTO `rooms` (`id`, `title`, `price`, `description`) VALUES (NULL, 'Double room', '200', 'double rooms are assigned to two people; expect one double bed, or two twin beds depending on the hotel.');
+INSERT INTO `rooms` (`id`, `title`, `price`, `description`) VALUES (NULL, 'Triple room', '300', 'as the name might suggest, this room is equipped for three people to stay. The room will have a combination of either three twin beds, one double bed and a twin, or two double beds.');
+INSERT INTO `rooms` (`id`, `title`, `price`, `description`) VALUES (NULL, 'Quad room', '400', 'a quad room is set up for four people to stay comfortably. This means the room will have two double beds. Some, however, may be set up dormitory-style with bunks or twins, so check with the property to make sure.');
+INSERT INTO `rooms` (`id`, `title`, `price`, `description`) VALUES (NULL, 'Double-double', '500', 'these rooms have two double beds (sometimes two queen beds) and are meant to accommodate two to four people, especially families traveling with young kids.');
+INSERT INTO `rooms` (`id`, `title`, `price`, `description`) VALUES (NULL, 'Queen', '600', 'A room with a queen-sized bed. May be occupied by one or more people.');
+
+---
+
+## PHP
+
+### db_connection.php
+<?php
+
+// database connection
+$db_conn = mysqli_connect("localhost","root","root","react_php_crud");
+
+if (!$db_conn){
+    // stops code execution on error
+    die('Error connect to database');
+}
+
+### all-rooms.php
+<?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: access");
+header("Access-Control-Allow-Methods: GET");
+header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+require 'db_connection.php';
+
+$allRooms = mysqli_query($db_conn, "SELECT * FROM `rooms`");
+if (mysqli_num_rows($allRooms) > 0) {
+    $all_rooms = mysqli_fetch_all($allRooms, MYSQLI_ASSOC);
+    echo json_encode(["success" => 1, "rooms" => $all_rooms]);
+} else {
+    echo json_encode(["success" => 0]);
+}
+
+### add-room.php
+<?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: access");
+header("Access-Control-Allow-Methods: POST");
+header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+require 'db_connection.php';
+
+// POST DATA
+$data = json_decode(file_get_contents("php://input"));
+
+if (
+    isset($data->title)
+    && isset($data->price)
+    && isset($data->description)
+    && !empty(trim($data->title))
+    && !empty(trim($data->price))
+    && !empty(trim($data->description))
+) {
+    $title = mysqli_real_escape_string($db_conn, trim($data->title));
+    $price = mysqli_real_escape_string($db_conn, trim($data->price));
+    $description = mysqli_real_escape_string($db_conn, trim($data->description));
+
+    $insertRoom = mysqli_query($db_conn, "INSERT INTO `rooms`(`title`,`price`,`description`) VALUES('$title','$useremail','$description')");
+    if ($insertRoom) {
+        $last_id = mysqli_insert_id($db_conn);
+        echo json_encode(["success" => 1, "msg" => "Room Inserted.", "id" => $last_id]);
+    } else {
+        echo json_encode(["success" => 0, "msg" => "Room Not Inserted!"]);
+    }
+
+} else {
+    echo json_encode(["success" => 0, "msg" => "Please fill all the required fields!"]);
+}
+
+### update-room.php
+<?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: access");
+header("Access-Control-Allow-Methods: POST");
+header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+require 'db_connection.php';
+
+$data = json_decode(file_get_contents("php://input"));
+
+if (
+    isset($data->id)
+    && isset($data->title)
+    && isset($data->price)
+    && isset($data->description)
+    && is_numeric($data->id)
+    && !empty(trim($data->title))
+    && !empty(trim($data->price))
+    && !empty(trim($data->description))
+) {
+    $title = mysqli_real_escape_string($db_conn, trim($data->title));
+    $price = mysqli_real_escape_string($db_conn, trim($data->price));
+    $description = mysqli_real_escape_string($db_conn, trim($data->description));
+    $updateRoom = mysqli_query($db_conn, "UPDATE `rooms` SET `title`='$title', `price`='$price', `description`='$description' WHERE `id`='$data->id'");
+    if ($updateRoom) {
+        echo json_encode(["success" => 1, "msg" => "Room Updated."]);
+    } else {
+        echo json_encode(["success" => 0, "msg" => "Room Not Updated!"]);
+    }
+} else {
+    echo json_encode(["success" => 0, "msg" => "Please fill all the required fields!"]);
+}
+
+### delete-room.php
+<?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: access");
+header("Access-Control-Allow-Methods: POST");
+header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+require 'db_connection.php';
+
+$data = json_decode(file_get_contents("php://input"));
+if (isset($data->id) && is_numeric($data->id)) {
+    $delID = $data->id;
+    $deleteRoom = mysqli_query($db_conn, "DELETE FROM `rooms` WHERE `id`='$delID'");
+    if ($deleteRoom) {
+        echo json_encode(["success" => 1, "msg" => "Room Deleted"]);
+    } else {
+        echo json_encode(["success" => 0, "msg" => "Room Not Found!"]);
+    }
+} else {
+    echo json_encode(["success" => 0, "msg" => "Room Not Found!"]);
+}
+
+## Options
+---
+![alt text](src/img/screen2.jpg "Insert and Edit information to DataBase")
 ## Available Scripts
+---
+![alt text](src/img/screen3.jpg "Search room")
+
+---
+![alt text](src/img/screen4.jpg "More information and 'Booking room'")
 
 In the project directory, you can run:
 
